@@ -2,6 +2,7 @@
 package cognixus.todo.controller;
 
 import cognixus.todo.body.request.CreateToDoRequest;
+import cognixus.todo.body.request.UpdateToDoRequest;
 import cognixus.todo.service.ToDoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,5 +26,10 @@ public class ToDoController {
     @RequestMapping(method = RequestMethod.POST, path = "/detail")
     public ResponseEntity<Object> createToDo (@RequestBody CreateToDoRequest request) {
         return new ResponseEntity<>(todoService.createToDo(request), HttpStatus.OK);
+    }
+    
+    @RequestMapping(method = RequestMethod.PUT, path = "/detail")
+    public ResponseEntity<Object> updateToDo (@RequestBody UpdateToDoRequest request) {
+        return new ResponseEntity<>(todoService.updateToDo(request), HttpStatus.OK);
     }
 }

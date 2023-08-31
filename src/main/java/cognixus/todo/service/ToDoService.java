@@ -2,8 +2,10 @@
 package cognixus.todo.service;
 
 import cognixus.todo.body.request.CreateToDoRequest;
+import cognixus.todo.body.request.UpdateToDoRequest;
 import cognixus.todo.entity.ToDo;
 import cognixus.todo.exception.BadRequestException;
+import cognixus.todo.exception.NotFoundException;
 import cognixus.todo.repository.ToDoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,21 @@ public class ToDoService {
         todo.setTitle(createToDoRequest.getTitle());
         
         log.info("creating todo: " + todo.getTitle());
+        
+        return todoRepository.save(todo);
+    }
+
+    public ToDo updateToDo(UpdateToDoRequest updateToDoRequest) {
+        
+        ToDo todo = todoRepository.getReferenceById(updateToDoRequest.getId());
+        
+        if(todo == null)
+            throw new NotFoundException("ToDo id not found");
+        
+        todo.setCompleted(updateToDoRequest.isCompleted());
+        
+        log.info("update todo id: " + todo.getId().toString()
+                + ", completed: " + todo.isCompleted());
         
         return todoRepository.save(todo);
     }
