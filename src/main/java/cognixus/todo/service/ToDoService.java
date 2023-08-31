@@ -7,6 +7,7 @@ import cognixus.todo.entity.ToDo;
 import cognixus.todo.exception.BadRequestException;
 import cognixus.todo.exception.NotFoundException;
 import cognixus.todo.repository.ToDoRepository;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -57,5 +58,16 @@ public class ToDoService {
         
         todo = todoRepository.save(todo);
         return todo;
+    }
+    
+    public List<ToDo> listToDo() {
+        
+        List<ToDo> listToDo = todoRepository.findAll();
+        
+        if(listToDo == null || listToDo.isEmpty())
+            throw new NotFoundException("ToDo list not found");
+        
+        log.info("list todo found: " + listToDo.size());
+        return listToDo;
     }
 }

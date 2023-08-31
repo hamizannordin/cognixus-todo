@@ -32,4 +32,9 @@ public class ToDoController {
     public ResponseEntity<Object> updateToDo (@RequestBody UpdateToDoRequest request) {
         return new ResponseEntity<>(todoService.updateToDo(request), HttpStatus.OK);
     }
+    
+    @RequestMapping(method = RequestMethod.GET, path = "/list")
+    public ResponseEntity<Object> listToDo () {
+        return new ResponseEntity<>(todoService.listToDo(), HttpStatus.OK);
+    }
 }
