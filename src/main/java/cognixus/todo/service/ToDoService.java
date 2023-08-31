@@ -39,7 +39,8 @@ public class ToDoService {
         
         log.info("creating todo: " + todo.getTitle());
         
-        return todoRepository.save(todo);
+        todo = todoRepository.save(todo);
+        return todo;
     }
 
     public ToDo updateToDo(UpdateToDoRequest updateToDoRequest) {
@@ -54,6 +55,7 @@ public class ToDoService {
         log.info("update todo id: " + todo.getId().toString()
                 + ", completed: " + todo.isCompleted());
         
-        return todoRepository.save(todo);
+        todo = todoRepository.save(todo);
+        return todo;
     }
 }
