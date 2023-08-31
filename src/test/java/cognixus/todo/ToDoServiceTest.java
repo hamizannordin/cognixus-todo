@@ -1,8 +1,10 @@
 package cognixus.todo;
 
 import cognixus.todo.body.request.CreateToDoRequest;
+import cognixus.todo.body.request.UpdateToDoRequest;
 import cognixus.todo.entity.ToDo;
 import cognixus.todo.exception.BadRequestException;
+import cognixus.todo.exception.NotFoundException;
 import cognixus.todo.repository.ToDoRepository;
 import cognixus.todo.service.ToDoService;
 import static org.assertj.core.api.Assertions.*;
@@ -32,7 +34,17 @@ public class ToDoServiceTest {
     
     // test-case 02 : createToDoSuccess
     String titleCase02 = "TEST";
-    int generatedIdCase02 = 1;
+    int generatedIdCase02 = 2;
+    
+    // test-case 03 : updateToDoFailIdNotFound
+    int idCase03 = 3;
+    boolean completedCase03 = true;
+    String messageCase03 = "ToDo id not found";
+    
+    // test-case 04 : updateToDoSuccess
+    String titleCase04 = "TEST";
+    int idCase04 = 4;
+    boolean completedCase04 = true;
     
     @BeforeEach
     public void init () {
@@ -46,6 +58,16 @@ public class ToDoServiceTest {
         todoCase02.setId(generatedIdCase02);
         
         when(todoRepository.save(any(ToDo.class))).thenReturn(todoCase02);
+        
+        // test-case 04 : updateToDoSuccess
+                
+        ToDo todoCase04 = new ToDo();
+        todoCase04.setTitle(titleCase04);
+        todoCase04.setId(idCase04);
+        todoCase04.setCompleted(completedCase04);
+        
+        when(todoRepository.getReferenceById(idCase04)).thenReturn(todoCase04);
+        when(todoRepository.save(todoCase04)).thenReturn(todoCase04);
         
         todoService = new ToDoService(todoRepository);
     }
@@ -94,16 +116,27 @@ public class ToDoServiceTest {
     /**
      * test-case 03 : updateToDoFailIdNotFound
      */
-//    @Test
-//    public void updateToDoFailIdNotFound() {
-//    }
+    @Test
+    public void updateToDoFailIdNotFound() {
+        UpdateToDoRequest updateToDoRequest = new UpdateToDoRequest();
+        updateToDoRequest.setId(idCase03);
+        updateToDoRequest.setCompleted(completedCase03);
+        assertThatThrownBy(()->todoService.updateToDo(updateToDoRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(messageCase03);
+    }
 
     /**
      * test-case 04 : updateToDoSuccess
      */
-//    @Test
-//    public void updateToDoSuccess() {
-//    }
+    @Test
+    public void updateToDoSuccess() {
+        UpdateToDoRequest updateToDoRequest = new UpdateToDoRequest();
+        updateToDoRequest.setId(idCase04);
+        updateToDoRequest.setCompleted(completedCase04);
+        assertThat(todoService.updateToDo(updateToDoRequest).isCompleted() 
+                == completedCase04);
+    }
 
     /**
      * test-case 05 : listToDoSucess
