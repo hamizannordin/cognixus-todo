@@ -91,7 +91,7 @@ public class ToDoServiceTest {
         todoCase04.setId(idCase04);
         todoCase04.setCompleted(completedCase04);
         
-        when(todoRepository.getReferenceById(idCase04)).thenReturn(todoCase04);
+        when(todoRepository.findById(idCase04)).thenReturn(Optional.of(todoCase04));
         when(todoRepository.save(todoCase04)).thenReturn(todoCase04);
         
         // test-case 06 : listToDoSucess
