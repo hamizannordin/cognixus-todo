@@ -7,6 +7,7 @@ import cognixus.todo.exception.BadRequestException;
 import cognixus.todo.exception.NotFoundException;
 import cognixus.todo.repository.ToDoRepository;
 import cognixus.todo.service.ToDoService;
+import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,15 @@ public class ToDoServiceTest {
     int idCase04 = 4;
     boolean completedCase04 = true;
     
+    // test-case 05 : listToDoFailListNotFound
+    String messageCase05 = "ToDo list not found";
+    
+    // test-case 06 : listToDoSucess
+    String titleCase06 = "TEST-LIST";
+    int idCase06 = 6;
+    ToDo todoCase06;
+    int todoListSizeCase06 = 3;
+    
     @BeforeEach
     public void init () {
         
@@ -68,6 +78,15 @@ public class ToDoServiceTest {
         
         when(todoRepository.getReferenceById(idCase04)).thenReturn(todoCase04);
         when(todoRepository.save(todoCase04)).thenReturn(todoCase04);
+        
+        // test-case 06 : listToDoSucess
+        
+        todoCase06 = new ToDo();
+        todoCase06.setId(idCase06);
+        todoCase06.setTitle(titleCase06);
+        
+        when(todoRepository.findAll()).thenReturn(
+                Collections.nCopies(todoListSizeCase06, todoCase06));
         
         todoService = new ToDoService(todoRepository);
     }
@@ -110,7 +129,7 @@ public class ToDoServiceTest {
     public void createToDoSuccess() {
         CreateToDoRequest createToDoRequest = new CreateToDoRequest();
         createToDoRequest.setTitle(titleCase02);
-        
+
         assertTrue(todoService.createToDo(createToDoRequest).getId() != null);
         assertTrue(!todoService.createToDo(createToDoRequest).isCompleted());
     }
@@ -143,21 +162,35 @@ public class ToDoServiceTest {
     }
 
     /**
-     * test-case 05 : listToDoSucess
+     * test-case 05 : listToDoFailListNotFound
      */
-//    @Test
-//    public void listToDoSucess() {
-//    }
+    @Test
+    public void listToDoFailListNotFound() {
+        when(todoRepository.findAll()).thenReturn(null);
+        todoService = new ToDoService(todoRepository);
         
+        assertTrue(assertThrows(NotFoundException.class, todoService::listToDo)
+                .getMessage().equals(messageCase05));
+    }
+
     /**
-     * test-case 06 : deleteToDoFailIdNotFound
+     * test-case 06 : listToDoSucess
+     */
+    @Test
+    public void listToDoSucess() {
+        assertTrue(todoService.listToDo().equals(
+                Collections.nCopies(todoListSizeCase06, todoCase06)));
+    }
+
+    /**
+     * test-case 07 : deleteToDoFailIdNotFound
      */
 //    @Test
 //    public void deleteToDoFailIdNotFound() {
 //    }
 
     /**
-     * test-case 07 : deleteToDoSuccess
+     * test-case 08 : deleteToDoSuccess
      */
 //    @Test
 //    public void deleteToDoSuccess() {
