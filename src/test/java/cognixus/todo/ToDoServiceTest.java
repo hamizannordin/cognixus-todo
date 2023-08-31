@@ -7,7 +7,7 @@ import cognixus.todo.exception.BadRequestException;
 import cognixus.todo.exception.NotFoundException;
 import cognixus.todo.repository.ToDoRepository;
 import cognixus.todo.service.ToDoService;
-import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -82,12 +82,12 @@ public class ToDoServiceTest {
         CreateToDoRequest createToDoRequestTitleNull = new CreateToDoRequest();
         createToDoRequestTitleNull.setTitle(titleCase00Null);
         
-        assertThatThrownBy(()->todoService.createToDo(createToDoRequestTitleEmpty))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage(messageCase00);
-        assertThatThrownBy(()->todoService.createToDo(createToDoRequestTitleNull))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage(messageCase00);
+        assertTrue(assertThrows(BadRequestException.class, 
+                ()->{todoService.createToDo(createToDoRequestTitleEmpty);})
+                .getMessage().equals(messageCase00));
+        assertTrue(assertThrows(BadRequestException.class, 
+                ()->{todoService.createToDo(createToDoRequestTitleNull);})
+                .getMessage().equals(messageCase00));
     }
 
     /**
@@ -97,9 +97,10 @@ public class ToDoServiceTest {
     public void createToDoFailTitleCharacterLengthExceed() {
         CreateToDoRequest createToDoRequest = new CreateToDoRequest();
         createToDoRequest.setTitle(titleCase01);
-        assertThatThrownBy(()->todoService.createToDo(createToDoRequest))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessage(messageCase01);
+        
+        assertTrue(assertThrows(BadRequestException.class, 
+                ()->{todoService.createToDo(createToDoRequest);})
+                .getMessage().equals(messageCase01));
     }
 
     /**
@@ -109,8 +110,9 @@ public class ToDoServiceTest {
     public void createToDoSuccess() {
         CreateToDoRequest createToDoRequest = new CreateToDoRequest();
         createToDoRequest.setTitle(titleCase02);
-        assertThat(todoService.createToDo(createToDoRequest).getId() != null);
-        assertThat(!todoService.createToDo(createToDoRequest).isCompleted());
+        
+        assertTrue(todoService.createToDo(createToDoRequest).getId() != null);
+        assertTrue(!todoService.createToDo(createToDoRequest).isCompleted());
     }
 
     /**
@@ -121,9 +123,10 @@ public class ToDoServiceTest {
         UpdateToDoRequest updateToDoRequest = new UpdateToDoRequest();
         updateToDoRequest.setId(idCase03);
         updateToDoRequest.setCompleted(completedCase03);
-        assertThatThrownBy(()->todoService.updateToDo(updateToDoRequest))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessage(messageCase03);
+        
+        assertTrue(assertThrows(NotFoundException.class, 
+                ()->{todoService.updateToDo(updateToDoRequest);})
+                .getMessage().equals(messageCase03));
     }
 
     /**
@@ -134,7 +137,8 @@ public class ToDoServiceTest {
         UpdateToDoRequest updateToDoRequest = new UpdateToDoRequest();
         updateToDoRequest.setId(idCase04);
         updateToDoRequest.setCompleted(completedCase04);
-        assertThat(todoService.updateToDo(updateToDoRequest).isCompleted() 
+        
+        assertTrue(todoService.updateToDo(updateToDoRequest).isCompleted() 
                 == completedCase04);
     }
 
@@ -144,7 +148,7 @@ public class ToDoServiceTest {
 //    @Test
 //    public void listToDoSucess() {
 //    }
-
+        
     /**
      * test-case 06 : deleteToDoFailIdNotFound
      */
