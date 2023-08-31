@@ -8,6 +8,7 @@ import cognixus.todo.exception.NotFoundException;
 import cognixus.todo.repository.ToDoRepository;
 import cognixus.todo.service.ToDoService;
 import java.util.Collections;
+import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,6 +57,20 @@ public class ToDoServiceTest {
     ToDo todoCase06;
     int todoListSizeCase06 = 3;
     
+    // test-case 07 : deleteToDoFailIdNotInteger
+    String idStrCase07 = "abc";
+    String messageCase07 = "Invalid id, not an integer";
+    
+    // test-case 08 : deleteToDoFailIdNotFound
+    int idCase08 = 8;
+    String idStrCase08 = idCase08 + "";
+    String messageCase08 = "ToDo id not found";
+    
+    // test-case 09 : deleteToDoSuccess
+    int idCase09 = 9;
+    String idStrCase09 = idCase09 + "";
+    ToDo todoCase09;
+    
     @BeforeEach
     public void init () {
         
@@ -87,6 +102,17 @@ public class ToDoServiceTest {
         
         when(todoRepository.findAll()).thenReturn(
                 Collections.nCopies(todoListSizeCase06, todoCase06));
+        
+        // test-case 08 : deleteToDoFailIdNotFound
+        
+        when(todoRepository.findById(idCase08)).thenReturn(Optional.empty());
+        
+        // test-case 09 : deleteToDoSuccess
+                
+        todoCase09 = new ToDo();
+        todoCase09.setId(idCase09);
+        
+        when(todoRepository.findById(idCase09)).thenReturn(Optional.of(todoCase09));
         
         todoService = new ToDoService(todoRepository);
     }
@@ -183,16 +209,31 @@ public class ToDoServiceTest {
     }
 
     /**
-     * test-case 07 : deleteToDoFailIdNotFound
+     * test-case 07 : deleteToDoFailIdNotInteger
      */
-//    @Test
-//    public void deleteToDoFailIdNotFound() {
-//    }
+    @Test
+    public void deleteToDoFailIdNotInteger() {
+        assertTrue(assertThrows(BadRequestException.class, 
+                ()->{todoService.deleteToDo(idStrCase07);})
+                .getMessage().equals(messageCase07));
+    }
 
     /**
-     * test-case 08 : deleteToDoSuccess
+     * test-case 08 : deleteToDoFailIdNotFound
      */
-//    @Test
-//    public void deleteToDoSuccess() {
-//    }
+    @Test
+    public void deleteToDoFailIdNotFound() {
+        assertTrue(assertThrows(NotFoundException.class, 
+                ()->{todoService.deleteToDo(idStrCase08);})
+                .getMessage().equals(messageCase08));
+    }
+
+    /**
+     * test-case 09 : deleteToDoSuccess
+     */
+    @Test
+    public void deleteToDoSuccess() {
+        assertTrue(todoService.deleteToDo(idStrCase09).getId().equals(idCase09));
+        assertTrue(!todoService.deleteToDo(idStrCase09).isCompleted());
+    }
 }
