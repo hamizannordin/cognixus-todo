@@ -47,17 +47,17 @@ public class ToDoService {
 
     public ToDo updateToDo(UpdateToDoRequest updateToDoRequest) {
         
-        ToDo todo = todoRepository.getReferenceById(updateToDoRequest.getId());
+        Optional<ToDo> optTodo = todoRepository.findById(updateToDoRequest.getId());
         
-        if(todo == null)
+        if(!optTodo.isPresent())
             throw new NotFoundException("ToDo id not found");
         
-        todo.setCompleted(updateToDoRequest.isCompleted());
+        optTodo.get().setCompleted(updateToDoRequest.isCompleted());
         
-        log.info("update todo id: " + todo.getId().toString()
-                + ", completed: " + todo.isCompleted());
+        log.info("update todo id: " + optTodo.get().getId().toString()
+                + ", completed: " + optTodo.get().isCompleted());
         
-        todo = todoRepository.save(todo);
+        ToDo todo = todoRepository.save(optTodo.get());
         return todo;
     }
     
