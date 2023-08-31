@@ -8,6 +8,7 @@ import cognixus.todo.exception.BadRequestException;
 import cognixus.todo.exception.NotFoundException;
 import cognixus.todo.repository.ToDoRepository;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,29 @@ public class ToDoService {
         
         log.info("list todo found: " + listToDo.size());
         return listToDo;
+    }
+    
+    public ToDo deleteToDo (String idStr) {
+        
+        int idInt;
+        
+        try {
+            idInt = Integer.parseInt(idStr);
+        }
+        catch(NumberFormatException e){
+            log.error("error parsing id: " + e.getMessage());
+            throw new BadRequestException("Invalid id, not an integer");
+        }
+        
+        Optional<ToDo> optTodo = todoRepository.findById(idInt);
+        
+        if(!optTodo.isPresent())
+            throw new NotFoundException("ToDo id not found");
+        
+        todoRepository.delete(optTodo.get());
+        
+        log.info("deleting todo id: " + optTodo.get().getId());
+        
+        return optTodo.get();
     }
 }
