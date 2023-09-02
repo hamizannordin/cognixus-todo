@@ -1,0 +1,20 @@
+services:
+    app:
+        container_name: cognixus-server
+        build: 
+          dockerfile: Dockerfile
+        restart: always
+        ports: 
+          - 8080:8080
+        extra_hosts:
+          - host.docker.internal:host-gateway
+    database:
+        container_name: cognixus-db
+        image: mariadb:11.1.2
+        environment:
+          MARIADB_USER: ${DB_USER}
+          MARIADB_PASSWORD: ${DB_PASSWORD}
+          MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+          MARIADB_DATABASE: cognixus
+        ports:
+          - 3306:3306
