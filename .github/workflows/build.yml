@@ -33,7 +33,7 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: jar-file
-        path: app.jar
+        path: target/*.jar
 
   build-docker:
 
@@ -46,7 +46,7 @@ jobs:
     - uses: actions/download-artifact@master
       with:
         name: jar-file
-        path: app.jar
+        path: target/*.jar
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
