@@ -1,0 +1,26 @@
+app:
+    success:
+        auth:
+            redirect:
+                url: ${SUCCESS_AUTH_REDIRECT_URL:http://localhost:8080/auth/token}
+jwt:
+    expiration: ${JWT_EXPIRATION:60}
+    issuer: ${JWT_ISSUER}
+    signkey: ${JWT_SIGNKEY}
+spring:
+    datasource:
+        driver-class-name: org.mariadb.jdbc.Driver
+        password: ${DB_PASSWORD}
+        url: ${DB_URL}
+        username: ${DB_USERNAME}
+    jpa:
+        hibernate:
+            ddl-auto: update
+    security:
+        oauth2:
+            client:
+                registration:
+                    google:
+                        client-id: ${GOOGLE_CLIENT_ID}
+                        client-secret: ${GOOGLE_CLIENT_SECRET}
+                        scope: email,profile,openid
