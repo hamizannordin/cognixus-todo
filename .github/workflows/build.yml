@@ -62,12 +62,19 @@ jobs:
 
     - name: Set env
       run: echo "DATE=$(date +%s)" >> $GITHUB_ENV
+
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: true
+        tags: h4mizan/cognixus:${{ env.DATE }}
     
-    - name: Build docker
-      run: docker compose -f docker-compose.yml build
+    # - name: Build docker
+    #   run: docker compose -f docker-compose.yml build
 
-    - name: Tag docker
-      run: docker tag h4mizan/cognixus:latest h4mizan/cognixus:${{ env.DATE }}
+    # - name: Tag docker
+    #   run: docker tag h4mizan/cognixus:latest h4mizan/cognixus:${{ env.DATE }}
 
-    - name: Push docker
-      run: docker push h4mizan/cognixus:${{ env.DATE }}
+    # - name: Push docker
+    #   run: docker push h4mizan/cognixus:${{ env.DATE }}
