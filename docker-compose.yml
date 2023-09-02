@@ -1,6 +1,7 @@
 services:
     app:
         container_name: cognixus-server
+        image: h4mizan/cognixus:latest
         build: 
           dockerfile: Dockerfile
         restart: always
@@ -12,7 +13,7 @@ services:
         container_name: cognixus-db
         image: mariadb:11.1.2
         environment:
-          MARIADB_USER: ${DB_USER}
+          MARIADB_USER: ${DB_USERNAME}
           MARIADB_PASSWORD: ${DB_PASSWORD}
           MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
           MARIADB_DATABASE: cognixus
