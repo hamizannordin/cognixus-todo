@@ -10,9 +10,9 @@ name: Java & Docker Build
 
 on:
   push:
-    branches: [ "TASK00-backend-home-assessment" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "TASK00-backend-home-assessment" ]
+    branches: [ "master" ]
 
 jobs:
   build-jar:
