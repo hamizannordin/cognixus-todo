@@ -10,7 +10,7 @@
     </parent>
     <groupId>cognixus</groupId>
     <artifactId>cognixus-todo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>cognixus-todo</name>
     <description>Simple TODO</description>
     <properties>
