@@ -54,11 +54,15 @@ public class WebSecurityConfig {
             throws Exception {
         http.csrf(c -> c.disable()).authorizeHttpRequests(authorize
                 -> authorize
-                        .requestMatchers(HttpMethod.POST, "/todo/detail").permitAll()
+                        //.requestMatchers(HttpMethod.POST, "/todo/detail").permitAll()
                         .requestMatchers("/auth/token").permitAll()
                         .requestMatchers("/auth/authenticate").permitAll()
-                        .requestMatchers("/login/***").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+                        .requestMatchers("/login/**").permitAll()
+                        .anyRequest().authenticated()//.permitAll()
         )
                 // OAuth2 Login handles the redirect to the OAuth 2.0 Login endpoint
                 // from the authorization server filter chain
